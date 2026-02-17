@@ -41,16 +41,20 @@ C2   = LM + CW + CG   # 2nd column left = 6.92
 
 
 # ══════════════════════════════════════════════════════════════════════
-# Comic theme
+# Professional modern theme
 # ══════════════════════════════════════════════════════════════════════
-FONT = "Comic Sans MS"
+FONT      = "Segoe UI"          # clean, modern, ships with Windows & Office
+FONT_HDR  = "Segoe UI Semibold" # bolder weight for titles
 
-BG      = RGBColor(255, 253, 240)
-INK     = RGBColor( 25,  25,  25)
-MUTED   = RGBColor( 80,  80,  80)
-NOTE_C  = RGBColor(200, 230, 201)
-FLOW_C  = RGBColor(179, 229, 252)
-CODE_C  = RGBColor(245, 245, 245)
+BG      = RGBColor(255, 255, 255)   # clean white
+INK     = RGBColor( 33,  37,  41)   # dark charcoal text
+MUTED   = RGBColor(108, 117, 125)   # secondary gray
+ACCENT  = RGBColor(  0, 102, 204)   # corporate blue (titles)
+NOTE_C  = RGBColor(232, 245, 233)   # subtle green tint
+FLOW_C  = RGBColor(227, 242, 253)   # subtle blue tint
+CODE_C  = RGBColor(248, 249, 250)   # near-white gray
+BORDER  = RGBColor(206, 212, 218)   # soft gray border
+ACCBAR  = RGBColor(  0, 102, 204)   # accent bar color
 
 
 # ══════════════════════════════════════════════════════════════════════
@@ -62,6 +66,14 @@ _MONO = {"Consolas", "Courier New", "Menlo", "Monaco"}
 
 def _bg(slide):
     f = slide.background.fill; f.solid(); f.fore_color.rgb = BG
+
+
+def _accent_bar(slide):
+    """Add a thin accent bar at the top of the slide for modern look."""
+    bar = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.RECTANGLE,
+                                 Inches(0), Inches(0), Inches(SLIDE_W), Inches(0.06))
+    bar.fill.solid(); bar.fill.fore_color.rgb = ACCBAR
+    bar.line.fill.background()
 
 
 def _tf(tf, *, bold1=False):
@@ -83,7 +95,8 @@ def _title_style(sh):
         return
     _tf(sh.text_frame, bold1=True)
     for p in sh.text_frame.paragraphs:
-        p.font.size = Pt(32); p.font.bold = True; p.font.color.rgb = INK
+        p.font.size = Pt(30); p.font.bold = True
+        p.font.name = FONT_HDR; p.font.color.rgb = ACCENT
 
 
 def _title(slide, text):
@@ -94,8 +107,8 @@ def _title(slide, text):
     bx = slide.shapes.add_textbox(Inches(LM), Inches(TT), Inches(BW), Inches(0.7))
     bx.text_frame.clear()
     r = bx.text_frame.paragraphs[0].add_run()
-    r.text = text; r.font.size = Pt(32); r.font.bold = True
-    r.font.name = FONT; r.font.color.rgb = INK
+    r.text = text; r.font.size = Pt(30); r.font.bold = True
+    r.font.name = FONT_HDR; r.font.color.rgb = ACCENT
 
 
 def _bul(slide, items, *, l=LM, t=BT, w=BW, h=5.0, fs=18, sp=5):
@@ -112,7 +125,7 @@ def _code(slide, lines, *, l=LM, t=4.0, w=BW, h=1.4):
     bx = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.ROUNDED_RECTANGLE,
                                 Inches(l), Inches(t), Inches(w), Inches(h))
     bx.fill.solid(); bx.fill.fore_color.rgb = CODE_C
-    bx.line.color.rgb = INK; bx.line.width = Pt(1.5)
+    bx.line.color.rgb = BORDER; bx.line.width = Pt(1)
     tf = bx.text_frame; tf.clear(); tf.word_wrap = True
     for i, ln in enumerate(lines):
         p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
@@ -124,10 +137,10 @@ def _note(slide, text):
     bx = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.ROUNDED_RECTANGLE,
                                 Inches(LM), Inches(NT), Inches(BW), Inches(NH))
     bx.fill.solid(); bx.fill.fore_color.rgb = NOTE_C
-    bx.line.color.rgb = INK; bx.line.width = Pt(1.5)
+    bx.line.color.rgb = BORDER; bx.line.width = Pt(0.75)
     tf = bx.text_frame; tf.clear(); tf.word_wrap = True
     p = tf.paragraphs[0]; p.text = text
-    p.font.size = Pt(13); p.font.name = FONT; p.font.color.rgb = INK
+    p.font.size = Pt(13); p.font.name = FONT; p.font.color.rgb = MUTED
 
 
 def _section(prs, title, sub=None):
@@ -136,7 +149,7 @@ def _section(prs, title, sub=None):
         bx = sl.shapes.add_textbox(Inches(LM), Inches(BT + 0.6), Inches(BW), Inches(1.6))
         bx.text_frame.clear()
         p = bx.text_frame.paragraphs[0]; p.text = sub
-        p.font.size = Pt(22); p.font.name = FONT; p.font.color.rgb = MUTED
+        p.font.size = Pt(20); p.font.name = FONT; p.font.color.rgb = MUTED; p.font.italic = True
 
 
 def _cols(slide, lh, li, rh, ri, *, th=BT, fs=16):
@@ -145,7 +158,7 @@ def _cols(slide, lh, li, rh, ri, *, th=BT, fs=16):
         bx = slide.shapes.add_textbox(Inches(x), Inches(th), Inches(CW), Inches(0.4))
         bx.text_frame.text = hdr
         p = bx.text_frame.paragraphs[0]
-        p.font.size = Pt(18); p.font.bold = True; p.font.name = FONT; p.font.color.rgb = INK
+        p.font.size = Pt(17); p.font.bold = True; p.font.name = FONT_HDR; p.font.color.rgb = ACCENT
     bh = NT - tb - 0.15
     _bul(slide, li, l=LM, t=tb, w=CW, h=bh, fs=fs)
     _bul(slide, ri, l=C2,  t=tb, w=CW, h=bh, fs=fs)
@@ -160,15 +173,15 @@ def _flow(slide, steps):
         sh = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.ROUNDED_RECTANGLE,
                                     Inches(bx), Inches(y), Inches(bw_), Inches(bh_))
         sh.fill.solid(); sh.fill.fore_color.rgb = FLOW_C
-        sh.line.color.rgb = INK; sh.line.width = Pt(1.5)
+        sh.line.color.rgb = BORDER; sh.line.width = Pt(1)
         tf = sh.text_frame; tf.clear(); tf.word_wrap = True
         p = tf.paragraphs[0]; p.text = step; p.alignment = PP_ALIGN.CENTER
-        p.font.size = Pt(15); p.font.bold = True; p.font.name = FONT; p.font.color.rgb = INK
+        p.font.size = Pt(14); p.font.bold = True; p.font.name = FONT_HDR; p.font.color.rgb = ACCENT
         if i < n - 1:
             ar = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.RIGHT_ARROW,
                                         Inches(bx + bw_), Inches(y + 0.25),
                                         Inches(gap), Inches(bh_ - 0.50))
-            ar.fill.solid(); ar.fill.fore_color.rgb = INK; ar.line.color.rgb = INK
+            ar.fill.solid(); ar.fill.fore_color.rgb = ACCENT; ar.line.color.rgb = ACCENT
 
 
 # ══════════════════════════════════════════════════════════════════════
@@ -720,9 +733,10 @@ def build_deck() -> Presentation:
         "Referensi: BUKU_PANDUAN_AI.pdf (buku) untuk penjelasan lebih panjang.",
     ])
 
-    # ── Final pass: consistent theme ─────────────────────────────────
+    # ── Final pass: consistent theme + accent bar ────────────────────
     for s in prs.slides:
         _bg(s)
+        _accent_bar(s)
         if getattr(s.shapes, "title", None) is not None:
             _title_style(s.shapes.title)
         for sh in s.shapes:
