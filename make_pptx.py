@@ -297,6 +297,9 @@ def _add_table_like(slide, title_left: str, left_items: list[str], title_right: 
 
 def build_deck() -> Presentation:
     prs = Presentation()
+    # Set widescreen 16:9 size (PowerPoint default widescreen)
+    prs.slide_width = Inches(13.3333333333)
+    prs.slide_height = Inches(7.5)
 
     # --- Cover ---
     slide = prs.slides.add_slide(prs.slide_layouts[0])
