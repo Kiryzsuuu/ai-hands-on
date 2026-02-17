@@ -61,7 +61,12 @@ ACCBAR  = RGBColor(  0, 102, 204)   # accent bar color
 # Helpers
 # ══════════════════════════════════════════════════════════════════════
 
-_MONO = {"Consolas", "Courier New", "Menlo", "Monaco"}
+_KEEP = {"Consolas", "Courier New", "Menlo", "Monaco", FONT, FONT_HDR}
+
+
+def _no_line(shape):
+    """Remove any visible border from a shape."""
+    shape.line.fill.background()
 
 
 def _bg(slide):
@@ -74,26 +79,27 @@ def _accent_bar(slide):
                                  Inches(0), Inches(0), Inches(SLIDE_W), Inches(0.06))
     bar.fill.solid(); bar.fill.fore_color.rgb = ACCBAR
     bar.line.fill.background()
+    bar.name = "__accent_bar__"
 
 
-def _tf(tf, *, bold1=False):
-    for i, p in enumerate(tf.paragraphs):
-        p.font.name = FONT
+def _tf(tf):
+    """Normalise font family only; colours stay as set by each helper."""
+    for p in tf.paragraphs:
+        if p.font.name not in _KEEP:
+            p.font.name = FONT
         if p.font.size is None:
             p.font.size = Pt(18)
-        p.font.color.rgb = INK
-        if bold1 and i == 0:
-            p.font.bold = True
         for r in p.runs:
-            if r.font.name not in _MONO:
+            if r.font.name is None and p.font.name in _KEEP:
+                continue
+            if r.font.name not in _KEEP:
                 r.font.name = FONT
-            r.font.color.rgb = INK
 
 
 def _title_style(sh):
     if sh is None:
         return
-    _tf(sh.text_frame, bold1=True)
+    _tf(sh.text_frame)
     for p in sh.text_frame.paragraphs:
         p.font.size = Pt(30); p.font.bold = True
         p.font.name = FONT_HDR; p.font.color.rgb = ACCENT
@@ -105,6 +111,7 @@ def _title(slide, text):
         _title_style(slide.shapes.title)
         return
     bx = slide.shapes.add_textbox(Inches(LM), Inches(TT), Inches(BW), Inches(0.7))
+    _no_line(bx)
     bx.text_frame.clear()
     r = bx.text_frame.paragraphs[0].add_run()
     r.text = text; r.font.size = Pt(30); r.font.bold = True
@@ -113,6 +120,7 @@ def _title(slide, text):
 
 def _bul(slide, items, *, l=LM, t=BT, w=BW, h=5.0, fs=18, sp=5):
     bx = slide.shapes.add_textbox(Inches(l), Inches(t), Inches(w), Inches(h))
+    _no_line(bx)
     tf = bx.text_frame; tf.word_wrap = True; tf.clear()
     for i, item in enumerate(items):
         p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
@@ -127,6 +135,8 @@ def _code(slide, lines, *, l=LM, t=4.0, w=BW, h=1.4):
     bx.fill.solid(); bx.fill.fore_color.rgb = CODE_C
     bx.line.color.rgb = BORDER; bx.line.width = Pt(1)
     tf = bx.text_frame; tf.clear(); tf.word_wrap = True
+    tf.margin_left = Inches(0.25); tf.margin_right = Inches(0.15)
+    tf.margin_top = Inches(0.10); tf.margin_bottom = Inches(0.10)
     for i, ln in enumerate(lines):
         p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
         r = p.add_run(); r.text = ln
@@ -139,14 +149,18 @@ def _note(slide, text):
     bx.fill.solid(); bx.fill.fore_color.rgb = NOTE_C
     bx.line.color.rgb = BORDER; bx.line.width = Pt(0.75)
     tf = bx.text_frame; tf.clear(); tf.word_wrap = True
+    tf.margin_left = Inches(0.20); tf.margin_right = Inches(0.15)
+    tf.margin_top = Inches(0.08); tf.margin_bottom = Inches(0.08)
     p = tf.paragraphs[0]; p.text = text
     p.font.size = Pt(13); p.font.name = FONT; p.font.color.rgb = MUTED
+    p.alignment = PP_ALIGN.CENTER
 
 
 def _section(prs, title, sub=None):
     sl = prs.slides.add_slide(prs.slide_layouts[5]); _bg(sl); _title(sl, title)
     if sub:
         bx = sl.shapes.add_textbox(Inches(LM), Inches(BT + 0.6), Inches(BW), Inches(1.6))
+        _no_line(bx)
         bx.text_frame.clear()
         p = bx.text_frame.paragraphs[0]; p.text = sub
         p.font.size = Pt(20); p.font.name = FONT; p.font.color.rgb = MUTED; p.font.italic = True
@@ -156,6 +170,7 @@ def _cols(slide, lh, li, rh, ri, *, th=BT, fs=16):
     tb = th + 0.45
     for x, hdr in ((LM, lh), (C2, rh)):
         bx = slide.shapes.add_textbox(Inches(x), Inches(th), Inches(CW), Inches(0.4))
+        _no_line(bx)
         bx.text_frame.text = hdr
         p = bx.text_frame.paragraphs[0]
         p.font.size = Pt(17); p.font.bold = True; p.font.name = FONT_HDR; p.font.color.rgb = ACCENT
@@ -203,7 +218,8 @@ def build_deck() -> Presentation:
         "+ alur belajar + latihan + pembahasan + troubleshooting\n"
         f"Generated: {date.today().isoformat()}  |  Repo: Ai Learn"
     )
-    _tf(sub.text_frame)
+    for p in sub.text_frame.paragraphs:
+        p.font.name = FONT; p.font.size = Pt(18); p.font.color.rgb = MUTED
 
     # ── Agenda ───────────────────────────────────────────────────────
     sl = prs.slides.add_slide(prs.slide_layouts[1]); _bg(sl)
@@ -733,13 +749,17 @@ def build_deck() -> Presentation:
         "Referensi: BUKU_PANDUAN_AI.pdf (buku) untuk penjelasan lebih panjang.",
     ])
 
-    # ── Final pass: consistent theme + accent bar ────────────────────
+    # ── Final pass: cleanup + accent bar + font normalisation ────────
     for s in prs.slides:
         _bg(s)
+        # Remove empty content placeholders (avoid dashed-border artefacts)
+        for ph in list(s.placeholders):
+            if ph.placeholder_format.idx > 0 and not ph.text.strip():
+                ph._element.getparent().remove(ph._element)
         _accent_bar(s)
-        if getattr(s.shapes, "title", None) is not None:
-            _title_style(s.shapes.title)
         for sh in s.shapes:
+            if getattr(sh, 'name', '') == '__accent_bar__':
+                continue
             if getattr(sh, "has_text_frame", False) and sh.has_text_frame:
                 _tf(sh.text_frame)
 
