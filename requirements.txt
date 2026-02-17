@@ -1,0 +1,32 @@
+# Package requirements untuk AI Learning
+# Updated untuk Python 3.13 compatibility
+
+# Machine Learning core libraries (versi terbaru untuk Python 3.13)
+scikit-learn>=1.4.0
+numpy>=1.26.0
+pandas>=2.1.0
+
+# Data visualization
+matplotlib>=3.8.0
+seaborn>=0.13.0
+
+# Deep learning (versi terbaru dengan Python 3.13 support)
+tensorflow>=2.15.0
+
+# Image processing
+Pillow>=10.1.0
+opencv-python>=4.8.1.78
+
+# Progress bars dan utilities
+tqdm>=4.66.0
+
+# Jupyter notebook (optional untuk eksperimen)
+jupyter>=1.0.0
+
+# Export modul (PDF sudah pakai matplotlib; PPTX pakai python-pptx)
+python-pptx>=1.0.0
+
+# NOTE: Jika masih ada error:
+# 1. Update pip: python -m pip install --upgrade pip
+# 2. Install tanpa version lock: pip install scikit-learn numpy pandas matplotlib seaborn tensorflow Pillow opencv-python tqdm jupyter
+# 3. Atau gunakan conda: conda install scikit-learn numpy pandas matplotlib seaborn tensorflow
