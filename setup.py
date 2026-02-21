@@ -43,13 +43,21 @@ def install_package(package):
 def check_and_install_packages():
     """Check and install required packages"""
     print("\n📦 Checking and installing required packages...")
-    
-    # List of required packages
+
+    # List of required packages (core)
     packages = [
         "numpy", "pandas", "matplotlib", "seaborn",
-        "scikit-learn", "tensorflow", "Pillow", 
-        "opencv-python", "tqdm", "jupyter"
+        "scikit-learn", "Pillow", "opencv-python",
+        "tqdm", "jupyter", "python-pptx"
     ]
+
+    # TensorFlow is optional because it often lags behind newest Python versions
+    tf_supported = sys.version_info < (3, 13)
+    if tf_supported:
+        packages.insert(5, "tensorflow")
+    else:
+        print(f"\n⚠️  TensorFlow di-skip (Python {sys.version_info[0]}.{sys.version_info[1]})")
+        print("   Program 3/4 membutuhkan TensorFlow; gunakan Python 3.10–3.12 untuk itu.")
     
     installed = []
     failed = []
@@ -90,14 +98,16 @@ def check_and_install_packages():
 def test_basic_imports():
     """Test if we can import basic libraries"""
     print("\n🧪 Testing basic AI library imports...")
-    
+
     tests = [
         ("numpy", "import numpy as np"),
         ("pandas", "import pandas as pd"),
         ("matplotlib", "import matplotlib.pyplot as plt"),
         ("scikit-learn", "from sklearn.linear_model import LinearRegression"),
-        ("tensorflow", "import tensorflow as tf"),
     ]
+
+    if sys.version_info < (3, 13):
+        tests.append(("tensorflow", "import tensorflow as tf"))
     
     all_pass = True
     

@@ -15,17 +15,30 @@ Tutorial ini akan membawa Anda step-by-step memahami konsep fundamental AI denga
 
 ### 2. Install Dependencies
 ```bash
-# GUNAKAN COMMAND INI (sudah fixed untuk Python 3.13):
-& "C:/Users/Rizky/Documents/Coding/Ai Learn/.venv/Scripts/python.exe" -m pip install --upgrade pip
-& "C:/Users/Rizky/Documents/Coding/Ai Learn/.venv/Scripts/python.exe" -m pip install scikit-learn numpy pandas matplotlib seaborn tensorflow pillow opencv-python tqdm jupyter
+# Disarankan pakai virtual environment (.venv)
+# Windows (PowerShell):
+python -m venv .venv
+& ".\.venv\Scripts\Activate.ps1"
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 
-# Atau gunakan setup script:
-.\setup_windows.bat
+# Mac/Linux (Terminal):
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+
+# Catatan TensorFlow:
+# - Program 1/2 tidak butuh TensorFlow.
+# - Program 3/4 butuh TensorFlow, dan biasanya paling stabil di Python 3.10–3.12.
 ```
 
 ### 3. Test Installation
 ```bash
-& "C:/Users/Rizky/Documents/Coding/Ai Learn/.venv/Scripts/python.exe" -c "import tensorflow, sklearn, matplotlib; print('✅ Semua library terinstall!')"
+python -c "import numpy, pandas, sklearn, matplotlib; print('✅ Core libraries OK!')"
+
+# Optional (untuk Program 3/4, jika TensorFlow terinstall):
+python -c "import tensorflow as tf; print('✅ TensorFlow OK:', tf.__version__)"
 ```
 
 ---

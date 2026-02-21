@@ -147,7 +147,11 @@ ai-learning-env\Scripts\activate
 python -m pip install --upgrade pip
 
 # 6. Install packages
-pip install scikit-learn numpy pandas matplotlib seaborn tensorflow pillow opencv-python tqdm jupyter
+pip install scikit-learn numpy pandas matplotlib seaborn pillow opencv-python tqdm jupyter python-pptx
+
+# (Opsional) TensorFlow untuk Program 3/4
+# Biasanya paling stabil di Python 3.10–3.12:
+# pip install tensorflow
 ```
 
 #### **Mac Setup:**
@@ -166,7 +170,11 @@ python3 -m venv ai-learning-env
 source ai-learning-env/bin/activate
 
 # 5. Install packages  
-pip3 install scikit-learn numpy pandas matplotlib seaborn tensorflow pillow opencv-python tqdm jupyter
+pip3 install scikit-learn numpy pandas matplotlib seaborn pillow opencv-python tqdm jupyter python-pptx
+
+# (Opsional) TensorFlow untuk Program 3/4
+# Biasanya paling stabil di Python 3.10–3.12:
+# pip3 install tensorflow
 ```
 
 ### 2.4 Troubleshooting Common Issues

@@ -18,6 +18,15 @@ if %errorlevel% neq 0 (
 echo ✅ Python terdeteksi
 echo.
 
+REM Detect Python major/minor version
+for /f %%a in ('python -c "import sys; print(sys.version_info[0])"') do set PY_MAJOR=%%a
+for /f %%a in ('python -c "import sys; print(sys.version_info[1])"') do set PY_MINOR=%%a
+
+set TF_PACKAGE=tensorflow
+if "%PY_MAJOR%"=="3" if %PY_MINOR% GEQ 13 (
+    set TF_PACKAGE=
+)
+
 REM Upgrade pip
 echo 📦 Upgrading pip...
 python -m pip install --upgrade pip
@@ -29,8 +38,13 @@ pip install -r requirements.txt
 if %errorlevel% neq 0 (
     echo.
     echo ⚠️ Error dengan requirements.txt, mencoba versi terbaru...
-    echo 📦 Installing packages tanpa version lock (Python 3.13 compatible)...
-    pip install scikit-learn numpy pandas matplotlib seaborn tensorflow pillow opencv-python tqdm jupyter
+    echo 📦 Installing packages tanpa version lock (core packages)...
+    if "%TF_PACKAGE%"=="" (
+        echo    ℹ️ TensorFlow di-skip karena Python %PY_MAJOR%.%PY_MINOR% (biasanya belum tersedia).
+        pip install scikit-learn numpy pandas matplotlib seaborn pillow opencv-python tqdm jupyter python-pptx
+    ) else (
+        pip install scikit-learn numpy pandas matplotlib seaborn %TF_PACKAGE% pillow opencv-python tqdm jupyter python-pptx
+    )
     
     if %errorlevel% neq 0 (
         echo.

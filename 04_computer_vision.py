@@ -15,10 +15,29 @@ Konsep yang dipelajari:
 # =================== IMPORT LIBRARIES ===================
 import numpy as np
 import matplotlib.pyplot as plt
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
-from tensorflow.keras.applications import VGG16
+import sys
+import importlib
+
+try:
+    tf = importlib.import_module("tensorflow")
+    keras = importlib.import_module("tensorflow.keras")
+    layers = importlib.import_module("tensorflow.keras.layers")
+    VGG16 = getattr(importlib.import_module("tensorflow.keras.applications"), "VGG16")
+except Exception as e:
+    py_ver = f"{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]}"
+    print("❌ TensorFlow tidak tersedia di environment ini.")
+    print(f"   Python terdeteksi: {py_ver}")
+    print("\nKenapa ini terjadi?")
+    print("- TensorFlow sering belum menyediakan paket untuk Python versi terbaru (mis. 3.13/3.14).")
+    print("\nSolusi cepat (untuk menjalankan Program 4):")
+    print("1) Install & pakai Python 3.10–3.12 (disarankan 3.12)")
+    print("2) Buat virtual environment lalu install TensorFlow")
+    print("\nContoh (Mac/Linux):")
+    print("- python3.12 -m venv .venv")
+    print("- source .venv/bin/activate")
+    print("- python -m pip install --upgrade pip")
+    print("- python -m pip install tensorflow")
+    raise SystemExit(1) from e
 import cv2
 from PIL import Image
 import warnings

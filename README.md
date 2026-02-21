@@ -49,8 +49,13 @@ python -m pip install --upgrade pip
 # 2. Install packages
 pip install -r requirements.txt
 
-# 3. Jika masih error (Python 3.13 compatibility):
-pip install scikit-learn numpy pandas matplotlib seaborn tensorflow pillow opencv-python tqdm jupyter
+# 3. Jika masih error (core packages / Python 3.13+ friendly):
+pip install scikit-learn numpy pandas matplotlib seaborn pillow opencv-python tqdm jupyter python-pptx
+
+# Catatan:
+# - Program 1/2 hanya butuh core packages.
+# - Program 3/4 butuh TensorFlow, dan biasanya paling stabil di Python 3.10–3.12:
+#   pip install tensorflow
 ```
 
 **Mac:**
@@ -64,8 +69,13 @@ python3 -m pip install --upgrade pip
 # 2. Install packages
 pip3 install -r requirements.txt
 
-# 3. Jika masih error (Python 3.13 compatibility):
-pip3 install scikit-learn numpy pandas matplotlib seaborn tensorflow pillow opencv-python tqdm jupyter
+# 3. Jika masih error (core packages / Python 3.13+ friendly):
+pip3 install scikit-learn numpy pandas matplotlib seaborn pillow opencv-python tqdm jupyter python-pptx
+
+# Catatan:
+# - Program 1/2 hanya butuh core packages.
+# - Program 3/4 butuh TensorFlow, dan biasanya paling stabil di Python 3.10–3.12:
+#   pip3 install tensorflow
 ```
 
 ### Option 3: Advanced Setup
@@ -204,10 +214,14 @@ pip install -r requirements.txt
 python -m pip install --upgrade pip
 
 # 2. Install dengan versi terbaru (tanpa version lock):
-pip install scikit-learn numpy pandas matplotlib seaborn tensorflow pillow opencv-python tqdm jupyter
+pip install scikit-learn numpy pandas matplotlib seaborn pillow opencv-python tqdm jupyter python-pptx
+
+# TensorFlow catatan:
+# - Jika Anda butuh Program 3/4, biasanya TensorFlow paling stabil di Python 3.10–3.12.
+# - Setelah pakai Python yang didukung, install: pip install tensorflow
 
 # 3. Atau gunakan conda (alternative):
-conda install scikit-learn numpy pandas matplotlib seaborn tensorflow
+conda install scikit-learn numpy pandas matplotlib seaborn
 ```
 
 **❌ "Cython.Compiler.Errors.CompileError"**

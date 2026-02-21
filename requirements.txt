@@ -1,7 +1,9 @@
 # Package requirements untuk AI Learning
-# Updated untuk Python 3.13 compatibility
+# Catatan kompatibilitas:
+# - Library core (numpy/pandas/sklearn/matplotlib) umumnya cepat update untuk Python terbaru.
+# - TensorFlow sering tertinggal beberapa versi Python; karena itu dibuat opsional via marker.
 
-# Machine Learning core libraries (versi terbaru untuk Python 3.13)
+# Machine Learning core libraries
 scikit-learn>=1.4.0
 numpy>=1.26.0
 pandas>=2.1.0
@@ -10,8 +12,10 @@ pandas>=2.1.0
 matplotlib>=3.8.0
 seaborn>=0.13.0
 
-# Deep learning (versi terbaru dengan Python 3.13 support)
-tensorflow>=2.15.0
+# Deep learning
+# TensorFlow belum selalu tersedia untuk Python versi terbaru (contoh: Python 3.13/3.14).
+# Jika Anda pakai Python 3.13+, instalasi ini akan otomatis DISKIP agar setup tetap berhasil.
+tensorflow>=2.15.0; python_version < "3.13"
 
 # Image processing
 Pillow>=10.1.0
@@ -28,5 +32,7 @@ python-pptx>=1.0.0
 
 # NOTE: Jika masih ada error:
 # 1. Update pip: python -m pip install --upgrade pip
-# 2. Install tanpa version lock: pip install scikit-learn numpy pandas matplotlib seaborn tensorflow Pillow opencv-python tqdm jupyter
-# 3. Atau gunakan conda: conda install scikit-learn numpy pandas matplotlib seaborn tensorflow
+# 2. Install tanpa version lock (tanpa TensorFlow):
+#    pip install scikit-learn numpy pandas matplotlib seaborn Pillow opencv-python tqdm jupyter
+# 3. Untuk Program 3/4 (butuh TensorFlow): gunakan Python 3.10–3.12 lalu:
+#    pip install tensorflow
