@@ -39,6 +39,18 @@ if [ "$PY_MAJOR" -eq 3 ] && [ "$PY_MINOR" -ge 13 ]; then
     TF_SUPPORTED=0
 fi
 
+# If TensorFlow isn't supported, install core dependencies without attempting tensorflow
+# (some users may still have an older requirements.txt that pins tensorflow unconditionally)
+REQ_FILE="requirements.txt"
+if [ "$TF_SUPPORTED" -eq 0 ]; then
+    REQ_FILE=".requirements-core.txt"
+    echo "⚠️ Python kamu $PY_MAJOR.$PY_MINOR → TensorFlow akan di-skip (belum ada wheel resmi)."
+    echo "   Setup tetap lanjut untuk Program 1/2. Untuk Program 3/4, gunakan Python 3.10–3.12."
+    # Remove any tensorflow lines while preserving everything else.
+    # shellcheck disable=SC2002
+    cat requirements.txt | grep -v -E '^[[:space:]]*tensorflow([<>=!~]|$)' > "$REQ_FILE"
+fi
+
 # Check if pip is installed
 if ! command -v pip3 &> /dev/null; then
     echo "📦 Installing pip3..."
@@ -51,7 +63,7 @@ python -m pip install --upgrade pip
 
 # Install requirements
 echo "📦 Installing AI libraries..."
-python -m pip install -r requirements.txt
+python -m pip install -r "$REQ_FILE"
 
 if [ $? -ne 0 ]; then
     echo ""
