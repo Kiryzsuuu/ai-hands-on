@@ -208,6 +208,26 @@ pip install [nama-library-yang-error]
 pip install -r requirements.txt
 ```
 
+**❌ "No matching distribution found for tensorflow" (umum di Python 3.13/3.14)**
+- Ini normal: TensorFlow sering belum tersedia untuk Python yang terlalu baru (contoh: Python 3.14).
+- Solusi paling mudah: pakai Python **3.10–3.12** untuk Program 3/4.
+
+Contoh (Mac/Linux, pakai `pyenv`):
+```bash
+brew install pyenv
+pyenv install 3.12.8
+pyenv local 3.12.8
+
+rm -rf .venv
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+pip install tensorflow
+```
+
+Alternatif (conda/miniforge): buat env Python 3.12, lalu `pip install tensorflow`.
+
 **❌ Scikit-learn compilation error (Python 3.13)**
 ```bash
 # 1. Update pip terlebih dahulu
